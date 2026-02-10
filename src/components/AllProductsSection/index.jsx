@@ -69,7 +69,7 @@ class AllProductsSection extends Component {
     const { activeOptionId, activeCategoryId, searchInput, activeRatingId } =
       this.state;
       
-    const apiUrl = `http://192.168.1.6:5000/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`;
+    const apiUrl = `https://ecomreactapi.onrender.com/products?sort_by=${activeOptionId}&category=${activeCategoryId}&title_search=${searchInput}&rating=${activeRatingId}`;
 
     const options = {
       headers: { Authorization: `Bearer ${jwtToken}` },
