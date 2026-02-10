@@ -15,7 +15,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCart = async () => {
       const jwtToken = Cookies.get('jwt_token')
-      const response = await fetch('http://192.168.1.6:5000/cart', {
+      const response = await fetch('https://ecomreactapi.onrender.com/cart', {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
         },

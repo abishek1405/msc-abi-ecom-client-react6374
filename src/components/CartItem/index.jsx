@@ -11,7 +11,7 @@ const CartItem = props => {
   const jwtToken = Cookies.get('jwt_token')
 
   const updateCartFromServer = async () => {
-    const response = await fetch('http://192.168.1.6:5000/cart', {
+    const response = await fetch('https://ecomreactapi.onrender.com/cart', {
       headers: {Authorization: `Bearer ${jwtToken}`},
     })
     const data = await response.json()
@@ -20,7 +20,7 @@ const CartItem = props => {
 
   const onIncrementQuantity = async () => {
     await fetch(
-      `http://192.168.1.6:5000/cart/increment/${productId}`,
+      `https://ecomreactapi.onrender.com/cart/increment/${productId}`,
       {
         method: 'PUT',
         headers: {Authorization: `Bearer ${jwtToken}`},
@@ -31,7 +31,7 @@ const CartItem = props => {
 
   const onDecrementQuantity = async () => {
     await fetch(
-      `http://192.168.1.6:5000/cart/decrement/${productId}`,
+      `https://ecomreactapi.onrender.com/cart/decrement/${productId}`,
       {
         method: 'PUT',
         headers: {Authorization: `Bearer ${jwtToken}`},
@@ -42,7 +42,7 @@ const CartItem = props => {
 
   const onRemoveCartItem = async () => {
     await fetch(
-      `http://192.168.1.6:5000/cart/${productId}`,
+      `https://ecomreactapi.onrender.com/cart/${productId}`,
       {
         method: 'DELETE',
         headers: {Authorization: `Bearer ${jwtToken}`},
@@ -55,7 +55,7 @@ const CartItem = props => {
     <li className="cart-item">
       <img
         className="cart-product-image"
-        src={`http://192.168.1.6:5000/uploads/${imageUrl}`}
+        src={`https://ecomreactapi.onrender.com/uploads/${imageUrl}`}
         alt={title}
       />
 
