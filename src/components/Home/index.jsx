@@ -1,4 +1,8 @@
 import Header from "../Header"
+import { Link } from "react-router-dom";
+
+
+
 import "./index.css"
 
 const HERO_IMAGE =
@@ -22,11 +26,11 @@ const Home = () => (
         way you are. So, celebrate the seasons new and exciting fashion in your
         own way.
       </p>
-      <a href="/products">
+      <Link to="/products">
         <button type="button" className="shop-now-button">
           Shop Now
         </button>
-      </a>
+      </Link>
     </div>
     <img
       src={HERO_IMAGE || "/placeholder.svg"}
