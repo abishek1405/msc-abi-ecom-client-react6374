@@ -60,7 +60,7 @@ const buyNow = async () => {
 
   try {
     // 1️⃣ Create Razorpay order on backend
-    const response = await fetch("http://192.168.1.6:5000/create-order", {
+    const response = await fetch("https://ecomreactapi.onrender.com/create-order", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +81,7 @@ const buyNow = async () => {
       order_id: order.id,
       handler: async (response) => {
         // 3️⃣ Save order in backend
-        const saveRes = await fetch("http://192.168.1.6:5000/save-order", {
+        const saveRes = await fetch("https://ecomreactapi.onrender.com/save-order", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
