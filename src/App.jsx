@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Route, Routes, Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import LoginForm from './components/LoginForm'
@@ -16,6 +16,19 @@ import './App.css'
 
 const App = () => {
   const [cartList, setCartList] = useState([])
+  const [orderList, setOrderList] = useState([])
+
+  useEffect(() => {
+    const jwtToken = Cookies.get('jwt_token')
+    const fetchorderdetails = async () => {
+      const response = await fetch('http://localhost:5000/orders', {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+      })
+      const data = await response.json()
+      setOrderList(data)
+    }
+    fetchorderdetails()
+  }, [])
 
   const decrementCartItemQuantity = id => {
     setCartList(prevCartList => {
@@ -39,7 +52,7 @@ const App = () => {
 
   const removeAllCartItems = async () => {
     const jwtToken = Cookies.get('jwt_token')
-    const response = await fetch('https://ecomreactapi.onrender.com/cart', {
+    const response = await fetch('http://localhost:5000/cart', {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${jwtToken}`,
@@ -72,6 +85,7 @@ const App = () => {
     <CartContext.Provider
       value={{
         cartList,
+        orderList,
         addCartItem,
         removeCartItem,
         removeAllCartItems,

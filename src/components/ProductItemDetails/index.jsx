@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react'
-import {useParams, Link} from 'react-router-dom'
+import {useNavigate, useParams, Link} from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { ClipLoader } from "react-spinners";
 import {BsPlusSquare, BsDashSquare} from 'react-icons/bs'
@@ -8,6 +8,7 @@ import Header from '../Header'
 import SimilarProductItem from '../SimilarProductItem'
 import CartContext from '../../context/CartContext'
 import './index.css'
+
 
 const apiStatusConstants = {
   initial: 'INITIAL',
@@ -18,6 +19,7 @@ const apiStatusConstants = {
 
 const ProductItemDetails = () => {
   const {id} = useParams() 
+  const navigate = useNavigate()   
   const [productData, setProductData] = useState({})
   const [similarProductsData, setSimilarProductsData] = useState([])
   const [apiStatus, setApiStatus] = useState(apiStatusConstants.initial)
@@ -29,7 +31,7 @@ const ProductItemDetails = () => {
     const getProductData = async () => {
       setApiStatus(apiStatusConstants.inProgress)
       const jwtToken = Cookies.get('jwt_token')
-      const apiUrl = `https://ecomreactapi.onrender.com/products/${id}`
+      const apiUrl = `http://localhost:5000/products/${id}`
       const options = {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -49,6 +51,88 @@ const ProductItemDetails = () => {
 
     getProductData()
   }, [id])
+
+
+
+
+const buyNow = async () => {
+  const jwtToken = Cookies.get("jwt_token");
+
+  try {
+    // 1️⃣ Create Razorpay order on backend
+    const response = await fetch("http://192.168.1.6:5000/create-order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+      body: JSON.stringify({ amount: productData.price * quantity }), // single product total
+    });
+
+    const order = await response.json();
+
+    // 2️⃣ Razorpay options
+    const options = {
+      key: "rzp_test_SC64IiafZAX0uf", // your Razorpay test key
+      amount: order.amount,
+      currency: "INR",
+      name: "My Shop",
+      description: productData.title,
+      order_id: order.id,
+      handler: async (response) => {
+        // 3️⃣ Save order in backend
+        const saveRes = await fetch("http://192.168.1.6:5000/save-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            cartList: [
+              {
+                productId: productData.id,
+                title: productData.title,
+                price: productData.price,
+                imageUrl: productData.imageUrl,
+                quantity,
+              },
+            ],
+            totalAmount: productData.price * quantity,
+          }),
+        });
+
+        if (saveRes.ok) {
+          navigate("/order-confirmation", {
+            state: { orderId: order.id, amount: productData.price * quantity },
+          });
+        } else {
+          alert("Payment done but order not saved ❌");
+        }
+      },
+      theme: { color: "#3399cc" },
+    };
+
+    // 4️⃣ Open Razorpay checkout
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error(error);
+    alert("Something went wrong ❌");
+  }
+};
+
+
+
+
+
+
+
+
+
+
 
   const onDecrementQuantity = () => {
     if (quantity > 1) {
@@ -105,7 +189,7 @@ const ProductItemDetails = () => {
         body: JSON.stringify(cartItem),
       }
 
-      const response = await fetch('https://ecomreactapi.onrender.com/cart', options)
+      const response = await fetch('http://localhost:5000/cart', options)
       if (response.ok) { 
         setCartList(prevCartList => { 
           const itemExists = prevCartList.find(each => each.productId === cartItem.productId) 
@@ -120,7 +204,7 @@ const ProductItemDetails = () => {
     return (
       <div className="product-details-success-view">
         <div className="product-details-container">
-          <img src={`https://ecomreactapi.onrender.com/uploads/${imageUrl}`} alt="product" className="product-image" />
+          <img src={`http://localhost:5000/uploads/${imageUrl}`} alt="product" className="product-image" />
           <div className="product">
             <h1 className="product-name">{title}</h1>
             <p className="brand-name">by: {brand}</p>
@@ -162,13 +246,22 @@ const ProductItemDetails = () => {
                 <BsPlusSquare className="quantity-controller-icon" />
               </button>
             </div>
-            <button
-              type="button"
-              className="button add-to-cart-btn"
-              onClick={onClickAddToCart}
-            >
-              ADD TO CART
-            </button>
+            <div className="add-and-buy-now-btn-container">
+              <button
+                type="button"
+                className="buy-btnn"
+                onClick={buyNow}
+              >
+                Buy Now
+              </button>
+              <button
+                type="button"
+                className="button add-to-cart-btn"
+                onClick={onClickAddToCart}
+              >
+                ADD TO CART
+              </button>
+            </div>
           </div>
         </div>
         {/* <h1 className="similar-products-heading-content">Similar Products</h1> */}

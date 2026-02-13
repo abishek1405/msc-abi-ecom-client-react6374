@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { FaBox } from "react-icons/fa";
 
 import CartContext from "../../context/CartContext";
@@ -8,7 +8,14 @@ import "./index.css";
 
 const Header = () => {
   const navigate = useNavigate();
-  const { cartList, removeAllCartItems } = useContext(CartContext);
+  const { cartList, orderList, removeAllCartItems } = useContext(CartContext);
+  
+  const orderItemsCount = () =>{
+    const orderCount = orderList.length;
+    return orderCount > 0 ? (
+      <span className="cart-count-badge">{orderCount}</span>
+    ) : null; 
+  }
 
   const renderCartItemsCount = () => {
     const cartItemsCount = cartList.length;
@@ -64,7 +71,7 @@ const Header = () => {
               <Link to="/products" className="nav-link">Products</Link>
             </li>
             <li className="nav-menu-item">
-              <Link to="/myorders" className="nav-link">My Order</Link>
+              <Link to="/myorders" className="nav-link">My Orders {orderItemsCount()}</Link>
             </li>
             <li className="nav-menu-item">
               <Link to="/cart" className="nav-link">
