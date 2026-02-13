@@ -31,7 +31,7 @@ const ProductItemDetails = () => {
     const getProductData = async () => {
       setApiStatus(apiStatusConstants.inProgress)
       const jwtToken = Cookies.get('jwt_token')
-      const apiUrl = `http://localhost:5000/products/${id}`
+      const apiUrl = `https://ecomreactapi.onrender.com/products/${id}`
       const options = {
         headers: {
           Authorization: `Bearer ${jwtToken}`,
@@ -189,7 +189,7 @@ const buyNow = async () => {
         body: JSON.stringify(cartItem),
       }
 
-      const response = await fetch('http://localhost:5000/cart', options)
+      const response = await fetch('https://ecomreactapi.onrender.com/cart', options)
       if (response.ok) { 
         setCartList(prevCartList => { 
           const itemExists = prevCartList.find(each => each.productId === cartItem.productId) 
@@ -204,7 +204,7 @@ const buyNow = async () => {
     return (
       <div className="product-details-success-view">
         <div className="product-details-container">
-          <img src={`http://localhost:5000/uploads/${imageUrl}`} alt="product" className="product-image" />
+          <img src={`https://ecomreactapi.onrender.com/uploads/${imageUrl}`} alt="product" className="product-image" />
           <div className="product">
             <h1 className="product-name">{title}</h1>
             <p className="brand-name">by: {brand}</p>

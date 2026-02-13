@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     const jwtToken = Cookies.get('jwt_token')
     const fetchorderdetails = async () => {
-      const response = await fetch('http://localhost:5000/orders', {
+      const response = await fetch('https://ecomreactapi.onrender.com/orders', {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
       const data = await response.json()
@@ -52,7 +52,7 @@ const App = () => {
 
   const removeAllCartItems = async () => {
     const jwtToken = Cookies.get('jwt_token')
-    const response = await fetch('http://localhost:5000/cart', {
+    const response = await fetch('https://ecomreactapi.onrender.com/cart', {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${jwtToken}`,
