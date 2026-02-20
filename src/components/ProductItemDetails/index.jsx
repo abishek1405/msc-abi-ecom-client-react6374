@@ -249,7 +249,7 @@ const buyNow = async () => {
             <div className="add-and-buy-now-btn-container">
               <button
                 type="button"
-                className="buy-btnn"
+                className="button-buy"
                 onClick={buyNow}
               >
                 Buy Now
