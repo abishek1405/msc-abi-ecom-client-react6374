@@ -164,7 +164,7 @@ class SignupForm extends Component {
 
     return (
       <div className="signup-main-container">
-      <div className="login-form-container">
+      <div className="login-form-container-sign">
         <img
           src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-logo-img.png"
           className="login-website-logo-mobile-img"
